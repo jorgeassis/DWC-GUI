@@ -1,0 +1,21 @@
+{% load static %}
+
+{% block content %}
+
+<div style="display: none">
+  <div id="ajax_scientificName">{% if record.scientificName != None %}{{ record.scientificName }}{% endif %}</div>
+  <div id="ajax_datasetName">Dataset: {% if record.datasetName != None %}{{ record.datasetName }}{% endif %}</div>
+  <div id="ajax_basisOfRecord">Tipo: {% if record.basisOfRecord != None %}{{ record.basisOfRecord }}{% endif %}</div>
+  
+  <div id="ajax_year">{% if record.year != None %}Ano: {{ record.year }}{% endif %}</div>
+  <div id="ajax_month">{% if record.month != None %} | Mês: {{ record.month }}{% endif %}</div>
+  <div id="ajax_day">{% if record.day != None %} | Dia: {{ record.day }}{% endif %}</div>
+
+  <div id="ajax_location">{% if record.location != None %}{{ record.location }}{% endif %}</div>
+
+  <div id="ajax_verbatimDepth">{% if record.verbatimDepth != None %}Profundidade: {{ record.verbatimDepth }}m{% endif %}</div>
+  <div id="ajax_link">{{ record.pk }}</div>
+
+</div>
+
+{% endblock content %}

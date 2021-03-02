@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+                 
+                <div class="page-content">
+                 
+                    <div class="main-wrapper container">
+
+                        <!-- INCLUDE SEARCH BAR -->
+
+                        {% include "widgets/searchBar.html" %}
+
+                        <!-- HEADER RESULTS -->
+                        
+                        <div class="row" style="margin-top: 50px">
+
+                            <div class="col-lg-12">
+                                
+                            </div>
+
+                            <div class="col-lg-9">
+
+                                <ol class="breadcrumb breadcrumb-separator-2">
+                                    <li class="breadcrumb-item"><a href="{{ HTTP_HOST }}/">Home</a></li>
+                                    <li class="breadcrumb-item"><a href="{{ HTTP_HOST }}/literature?displayType=Table">Literatura</a></li>
+                                    <li class="breadcrumb-item">Pesquisa [{{ bibliographicRecordsListCount }} registos bibliográficos]</li>
+                                </ol>
+
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div style="text-align:right; margin-top: 5px">
+
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12" style="text-align: center;">
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="row" style="margin-top: 15px;">
+
+                            <!-- ALERT -->
+
+                            {% if speciesRecordsListCount == 0 %}
+
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="alert alert-danger no-m" role="alert">
+                                        <span style="color: rgb(63, 63, 63)">A sua pesquisa não produziu nenhum resultado. Por favor volte a tentar com um critério de pesquisa diferente.</span>
+                                    </div>
+                                </div>
+                            </div>
+                         
+                            {% endif %}
+
+                            <!-- TABLE -->
+
+                            {% if request.GET.displayType == 'Table' %}
+
+                            <div class="col-lg-12">
+                                <div class="card card-transactions">
+                                    <div class="card-body">
+
+                                        <h5 class="card-title">Referências [<script>  
+                                        
+                                        var res = {{ bibliographicRecordsListCount }};
+                                        if (res > 25) {
+                                            result = 25;
+                                        } else {
+                                            result = {{ bibliographicRecordsListCount }};
+                                        }
+                                        document.write(result);
+                                        
+                                        </script> de {{ bibliographicRecordsListCount }}]</h5>
+                                        
+
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Referência</th>
+                                                        <th scope="col">Registos</th>
+                                                        <th scope="col"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    {% for records in records  %}
+                                                    {% if records.bibliographicCitation  %}
+                                                    <tr>
+                                                        <td>{{ records.bibliographicCitation }}</td>
+                                                        <td>{{ records.my_count }}</td>
+                                                        <td><a class="mr-2" href="{% url 'records' %}?displayType=Table&bibliographicCitationExact={{ records.bibliographicCitation }}&searchType=Advanced"><span class="badge badge-secondary">Explorar</span></a></td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    {% endfor %}
+
+                                                </tbody>
+                                            </table> 
+                                        </div>     
+
+
+                                        </div>     
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endif %}
+
+                            <!-- IMAGES -->
+
+                            {% if request.GET.displayType == 'Gallery' and recordsCount != 0 %}
+
+                            <div class="col-lg-12 col-md-12" style="margin-bottom: 10px">
+                                <h5>Fotografias &nbsp;<span class="badge badge-secondary"><script>  
+                                        
+                                    var res = {{ recordsWithMedia }};
+                                    if (res > 28) {
+                                        result = 28;
+                                    } else {
+                                        result = {{ recordsWithMedia }};
+                                    }
+                                    document.write(result);
+                                    
+                                    </script> de {{ recordsWithMedia }}</span></h5>
+                            </div>
+
+                            {% for records in records  %}
+
+                            <div class="col-lg-3 col-md-12">
+                                <a href="{{ HTTP_HOST }}/records/{{ records.pk }}">
+                                    <div class="card" style="overflow: hidden; max-height: 210px;">
+                                    
+                                        <div class="thumb{{ forloop.counter }}" ></div>
+                                        
+                                        <style>
+                                            .thumb{{ forloop.counter }} { 
+                                                background: url(static/images/associatedMedia/{{ records.associatedMedia|floatformat }}M.jpg) 50% 50% no-repeat; /* 50% 50% centers image in div */
+                                                width: 270px;
+                                                height: 270px;
+                                                }
+
+                                                .thumb{{ forloop.counter }} a {
+                                                display: block;
+                                                width: 270px;
+                                                height: 270px;
+                                                overflow: hidden;
+                                                }
+
+                                                .thumb{{ forloop.counter }} a:hover {   }
+                                        </style>
+
+                                        
+                                        <div class="card-img-overlay">
+                                            <span class="badge badge-secondary">{{ records.scientificName }}</span>
+                                            {% if records.location %}<span class="badge badge-pill badge-secondary">{{ records.location }}</span>{% endif %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>  
+                            
+                            {% endfor %}
+
+                            {% endif %}
+
+                            <!-- PAGINATOR -->
+
+                            {% if recordsCount != 0 %}
+
+                            <div class="col-lg-12"  style="display: flex; justify-content: center;">
+
+                                <div style="margin: 0 auto">
+                                        <ul class="pagination pagination-circle">
+
+                                            {% if records.has_previous %}
+                                            <li class="page-item"><a class="page-link" href="?page={{ records.previous_page_number }}{% include "widgets/dynamicLinkSearch.html" %}&displayType={{ request.GET.displayType }}">Anterior</a></li>
+                                            {% endif %}
+
+                                            {% for l in paginatorRange %}
+
+                                            {% if l %}
+        
+                                                {% if l <= records.number|add:3 and l >= records.number|add:-3 %}
+
+                                                    <li class="page-item{% if records.number == l %} active{% endif %}"><a class="page-link" href="?page={{forloop.counter}}&displayType={{ request.GET.displayType }}{% include "widgets/dynamicLinkSearch.html" %}">{{forloop.counter}}</a></li>
+
+                                                {% endif %}
+        
+                                            {% endif %}
+        
+                                            {% endfor %}
+
+                                            {% if records.has_next %}
+                                            <li class="page-item"><a class="page-link" href="?page={{ records.next_page_number }}&displayType={{ request.GET.displayType }}{% include "widgets/dynamicLinkSearch.html" %}">Próxima</a></li>
+                                            {% endif %}
+
+                                        </ul>
+                                    </div>
+
+                            </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+{% endblock content %}
+

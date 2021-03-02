@@ -1,0 +1,265 @@
+/* Write your custom CSS here */
+
+/*------------------------------------------------------------
+Maps
+------------------------------------------------------------*/
+
+.leaflet-popup-content-wrapper {
+    padding: 2px;
+    max-height: 140px;
+    width: 250px;
+    height: 140px;
+    overflow-y: auto;
+    text-align: left;
+    border-radius: 8px;
+}
+.leaflet-popup-content {
+    font-family: Lato;
+    font-size: 13px;
+    line-height: 1.8;
+    margin: 0;
+    padding: 10px;
+   }
+   .leaflet-popup-content a{
+    font-family: Lato;
+    font-size: 13px;
+    color: #3e9473;
+   }
+#loading{
+    width: 50px;
+    height: 50px;
+    /* Center vertically and horizontally */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -25px 0 0 -25px;
+    display: none; 
+    width: 250px;
+    z-index: 999;
+}
+
+/*------------------------------------------------------------
+General
+------------------------------------------------------------*/
+
+.navbar-search .form-group {
+    margin-bottom: 0;
+}
+
+.navbar-search #nav-search {
+    width: 100%;
+    border-radius: 20px;
+    padding: 10px 22px;
+    font-size: 13px;
+    background: #ffffff;
+    color: #7D7D83;
+    font-weight: bold;
+    display: block;
+    border: 1px solid #a5a5a8;
+    margin: 6px 0 6px;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+.navbar-search #nav-search:focus {
+    outline: 0;
+    border-color: #5fd0a5;
+    background: #fff;
+    box-shadow: 0 0 1.25rem rgba(31,45,61,.08);
+}
+
+.dark-theme .navbar-search #nav-search {
+    background: rgba(255,255,255,.1)!important;
+    border: 1px solid #616161;
+    color: #fff!important;
+}
+
+
+.navbar-search #nav-search-autocomplete-all {
+    width: 100%;
+    border-radius: 20px;
+    padding: 10px 22px;
+    font-size: 13px;
+    background: #ffffff;
+    color: #7D7D83;
+    font-weight: bold;
+    display: block;
+    border: 1px solid #a5a5a8;
+    margin: 6px 0 6px;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+.navbar-search #nav-search-autocomplete-all:focus {
+    outline: 0;
+    border-color: #5fd0a5;
+    background: #fff;
+    box-shadow: 0 0 1.25rem rgba(31,45,61,.08);
+}
+
+.dark-theme .navbar-search #nav-search-autocomplete-all {
+    background: rgba(255,255,255,.1)!important;
+    border: 1px solid #616161;
+    color: #fff!important;
+}
+
+
+.navbar-search #nav-search-autocomplete-taxa {
+    width: 100%;
+    border-radius: 20px;
+    padding: 10px 22px;
+    font-size: 13px;
+    background: #ffffff;
+    color: #7D7D83;
+    font-weight: bold;
+    display: block;
+    border: 1px solid #a5a5a8;
+    margin: 6px 0 6px;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+.navbar-search #nav-search-autocomplete-taxa:focus {
+    outline: 0;
+    border-color: #5fd0a5;
+    background: #fff;
+    box-shadow: 0 0 1.25rem rgba(31,45,61,.08);
+}
+
+.dark-theme .navbar-search #nav-search-autocomplete-taxa {
+    background: rgba(255,255,255,.1)!important;
+    border: 1px solid #616161;
+    color: #fff!important;
+}
+
+.navbar-search #nav-search-autocomplete-site {
+    width: 100%;
+    border-radius: 20px;
+    padding: 10px 22px;
+    font-size: 13px;
+    background: #ffffff;
+    color: #7D7D83;
+    font-weight: bold;
+    display: block;
+    border: 1px solid #a5a5a8;
+    margin: 6px 0 6px;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+.navbar-search #nav-search-autocomplete-site:focus {
+    outline: 0;
+    border-color: #5fd0a5;
+    background: #fff;
+    box-shadow: 0 0 1.25rem rgba(31,45,61,.08);
+}
+
+.dark-theme .navbar-search #nav-search-autocomplete-site {
+    background: rgba(255,255,255,.1)!important;
+    border: 1px solid #616161;
+    color: #fff!important;
+}
+
+
+.navbar-search #nav-search-autocomplete-citation {
+    width: 100%;
+    border-radius: 20px;
+    padding: 10px 22px;
+    font-size: 13px;
+    background: #ffffff;
+    color: #7D7D83;
+    font-weight: bold;
+    display: block;
+    border: 1px solid #a5a5a8;
+    margin: 6px 0 6px;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+.navbar-search #nav-search-autocomplete-citation:focus {
+    outline: 0;
+    border-color: #5fd0a5;
+    background: #fff;
+    box-shadow: 0 0 1.25rem rgba(31,45,61,.08);
+}
+
+.dark-theme .navbar-search #nav-search-autocomplete-citation {
+    background: rgba(255,255,255,.1)!important;
+    border: 1px solid #616161;
+    color: #fff!important;
+}
+
+a {
+    color: #5fd0a5;
+}
+
+a:hover {
+    color: #38a67c;
+}
+
+/*------------------------------------------------------------
+Plots
+------------------------------------------------------------*/
+
+.sparkline-charts {
+    width: calc(100% + 61px);
+    height: 100px;
+    margin: 30px -26px -27px -25px;
+}
+
+
+.sparkline-charts-margin {
+    width: calc(100% + 51px);
+    height: 120px;
+    margin: 20px -26px -37px -21px;
+}
+
+/*------------------------------------------------------------
+Autocomplete
+------------------------------------------------------------*/
+
+.ui-menu {
+    padding: 7px;
+    font-family: Lato;
+    font-size: 13px;
+    text-decoration: none;
+    position: relative;
+    margin-top: 30px;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 1px 1px 6px #919191;
+    max-width:550px;
+    background-color: #FFFFFF;
+    color: #000000;
+    }
+    
+    .ui-menu-item a{
+    text-decoration: none;
+    font-weight: normal;
+    background-color: #FFFFFF;
+    color: #000000;
+    border: 0px dashed #6D6D6D;
+    }
+
+    .ui-menu-item a:hover{
+    text-decoration: none;
+    font-weight: normal;
+    background-color: #dadada;
+    color: #000000;
+    border: 0px dashed #6D6D6D;
+    }
+
+    .ui-helper-hidden-accessible{
+    display:none !important;
+    }       

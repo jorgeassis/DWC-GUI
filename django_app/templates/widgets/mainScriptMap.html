@@ -1,0 +1,110 @@
+
+<script>
+
+    var data = JSON.parse('{{ coordinates | safe }}');
+
+    var map = L.map('map', {
+      minZoom: 2,
+      fullscreenControl: {
+          pseudoFullscreen: false
+      }
+    }).setView([20, 0], 2);
+
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+
+         }).addTo(map);
+
+   function onClick(e) {
+
+    var inner_counter = 0;
+    var fullrecord = '{{ HTTP_HOST }}/records-simple/' + e.target.myCustomID + '/';
+
+    $("#loading-records").css("display", "block");
+
+    $.ajax({
+       url:fullrecord,
+       type:'GET',
+       success: function(data){
+           html = $('<div>').html(data);
+           res_ajax_scientificName = html.find("div#ajax_scientificName").html();
+           res_ajax_scientificName = res_ajax_scientificName.substring(0,22);
+
+           res_ajax_datasetName = html.find("div#ajax_datasetName").html();
+           res_ajax_datasetName = res_ajax_datasetName.substring(0,38);
+
+           res_ajax_basisOfRecord = html.find("div#ajax_basisOfRecord").html();
+           res_ajax_basisOfRecord = res_ajax_basisOfRecord.substring(0,38);
+
+           res_ajax_year = html.find("div#ajax_year").html();
+           res_ajax_month = html.find("div#ajax_month").html();
+           res_ajax_day = html.find("div#ajax_day").html();
+           res_ajax_verbatimDepth = html.find("div#ajax_verbatimDepth").html();
+
+           res_ajax_location = html.find("div#ajax_location").html();
+           res_ajax_location = res_ajax_location.substring(0,22);
+
+           res_ajax_link = html.find("div#ajax_link").html();
+
+           var innerHTML = "";
+           innerHTML += '<div><h6>' + res_ajax_scientificName;
+           innerHTML += '</div></h6>';
+           innerHTML += '<div>' + res_ajax_location;
+           innerHTML += '</div>';
+           innerHTML += '<div>' + res_ajax_year + res_ajax_month + res_ajax_day ;
+           innerHTML += '</div>';
+           innerHTML += '<div>' + res_ajax_verbatimDepth;
+           innerHTML += '</div>';
+           innerHTML += '<div>' + res_ajax_datasetName;
+           innerHTML += '</div>';
+           innerHTML += '<div><a href="';
+           innerHTML += '{{ HTTP_HOST }}/records/' + res_ajax_link;
+           innerHTML += '">Ver registo ></a>' 
+           innerHTML += '</div>';
+           
+           e.target.bindPopup(innerHTML)
+           e.target.openPopup();
+           $("#loading-records").css("display", "none");
+
+       }
+    });
+   };
+
+    var myRenderer = L.canvas({ padding: 0.5 });
+
+    var minLat = data[1].decimalLatitude;
+    var maxLat = data[1].decimalLatitude;
+    var minLong = data[1].decimalLongitude;
+    var maxLong = data[1].decimalLongitude;
+
+    for(var i = 0; i < data.length; i++) {
+        var dataobj = data[i];
+        var marker =   L.circleMarker([dataobj.decimalLatitude, dataobj.decimalLongitude], { renderer: myRenderer, weight: 1.5, radius: 4.25, color: "#3F846B", fillColor:  '#64C6A2', fillOpacity: 0.7 });
+        marker.myCustomID = dataobj.id.toString();
+        marker.addTo(map).on('click', onClick);
+
+        //  L.circleMarker([dataobj.decimalLatitude, dataobj.decimalLongitude], { renderer: myRenderer, weight: 2, radius: 5, color: "#000", fillColor:  'red', fillOpacity: 0.8 }).addTo(map).bindPopup(popInfo);
+
+        if (dataobj.decimalLatitude < minLat) minLat = dataobj.decimalLatitude;
+        if (dataobj.decimalLatitude > maxLat) maxLat = dataobj.decimalLatitude;
+        if (dataobj.decimalLongitude < minLong) minLong = dataobj.decimalLongitude;
+        if (dataobj.decimalLongitude > maxLong) maxLong = dataobj.decimalLongitude;
+
+    }
+
+    if (minLat < -90) minLat = -90;
+    if (maxLat > 90) maxLat = 90;
+    if (minLong < -180) minLong = -180;
+    if (maxLong > 180) maxLong = 180;
+
+    var corner1 = L.latLng(minLat-0.05, minLong-0.05),
+    corner2 = L.latLng(maxLat+0.05,maxLong+0.05),
+    bounds = L.latLngBounds(corner1, corner2);
+
+    map.fitBounds(bounds);
+    map.scrollWheelZoom.disable();
+
+    $("#loading-records").css("display", "none");
+
+
+</script>

@@ -1,0 +1,231 @@
+                        <!-- SEARCH BAR -->
+
+                        <form action="{% url 'records' %}" method="get">
+                            <div class="row stats-row">
+
+                                    <div class="col-lg-2 col-md-12"></div>
+
+                                    <div class="col-lg-6 col-md-12 ">
+                                        <div class="navbar-search" style="text-align:right">
+
+                                                <input name="displayType" value="Table" type="hidden" >
+                                                <div class="form-group">
+                                                    <input id="nav-search-autocomplete-all" name="q" type="text" placeholder="Espécies, locais, literatura ...">
+                                                </div>
+
+                                            <a class="dropdown-toggle aOverBackground" data-toggle="collapse" href="#collapseExample" style="margin-right: 12px;">
+                                                Pesquisa avançada
+                                            </a>
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-2 col-md-12"> 
+                                        <button type="submit" style="width: 125px; margin-top: 7px;" class="btn btn-secondary rounded-pill btn-secondary">Pesquisar</button>
+                                    </div>
+                                    <div class="col-lg-2 col-md-12"> </div>
+
+                            </div>
+                        </form>
+
+                         <!-- ADVANCED SEARCH BAR -->
+
+                        <div class="row collapse" id="collapseExample" style="margin: 30px 0px">
+                            <div class="card card-body">
+
+
+                                    <script>
+
+                                        $(function() {
+                                        var start_year = new Date().getFullYear();
+                                        end_year = 230;
+
+                                        for (var i = start_year; i > start_year - end_year ; i--) {
+                                            $('.selectYears').append('<option value="' + i + '">' + i + '</option>');
+                                        }
+                                        });
+
+                                        $(function() {
+
+                                        for (var i = 0; i < 500; i++) {
+                                            $('.selectDepths').append('<option value="' + i + '">' + i + '</option>');
+                                        }
+                                        });
+
+                                    </script>
+                                    <form action="{% url 'records' %}" method="get">
+
+                                    <input name="displayType" value="Table" type="hidden" >
+                                    <input name="searchType" value="Advanced" type="hidden" >
+
+                                        <div class="row">
+                                            
+                                            <div class="col-lg-12 col-md-12" style="margin-bottom: 10px; padding-left: 25px">
+                                                <span>Taxa</span>
+                                            </div>
+                                            <div class="col-lg-4 col-md-12"> 
+                                                <select name="taxon" class="form-control custom-select" id="exampleFormControlSelect1">
+                                                    <option value="">Nível taxonómico</option>
+                                                    <option value="Kingdom">Reino</option>
+                                                    <option value="Phylum">Filo</option>
+                                                    <option value="Class">Classe</option>
+                                                    <option value="Order">Ordem</option>
+                                                    <option value="Family">Família</option>
+                                                    <option value="Genus">Género</option>
+                                                    <option value="Species">Espécie</option>                                                    
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-4 col-md-12"> 
+                                                <input name="taxonName" id="nav-search-autocomplete-taxa" type="text" class="form-control" placeholder="Nome do taxon">
+                                            </div>
+                                            <div class="col-lg-4 col-md-12"> 
+                                            </div>
+
+                                            <div class="col-lg-4 col-md-12" style="margin-bottom: 10px; margin-top: 30px; padding-left: 25px">
+                                                <span>Local</span>
+                                            </div>
+                                            <div class="col-lg-4 col-md-12" style="margin-bottom: 10px; margin-top: 30px; padding-left: 25px">
+                                                <span>Profundidade (m)</span>
+                                            </div>
+                                            <div class="col-lg-4 col-md-12" style="margin-bottom: 10px; margin-top: 30px; padding-left: 25px">
+                                                <span>Data (ano)</span>
+                                            </div>
+
+                                            <div class="col-lg-4 col-md-12"> 
+                                                <input name="locality" id="nav-search-autocomplete-site" type="text" class="form-control" placeholder="Nome do local" >
+                                            </div>
+                                            <div class="col-lg-2 col-md-12"> 
+                                                <select name="depthFrom" class="form-control custom-select selectDepths" id="exampleFormControlSelect1">
+                                                    <option value="">Desde</option>
+                                                </select>
+                                            </div>
+                                        
+                                            <div class="col-lg-2 col-md-12"> 
+                                                <select name="depthTo" class="form-control custom-select selectDepths" id="exampleFormControlSelect1">
+                                                    <option value="">Até</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-2 col-md-12"> 
+                                                <select name="yearFrom" class="form-control custom-select selectYears" id="exampleFormControlSelect1">
+                                                    <option value="">Desde</option>
+                                                </select>
+                                            </div>
+                                        
+                                            <div class="col-lg-2 col-md-12"> 
+                                                <select name="yearTo" class="form-control custom-select selectYears" id="exampleFormControlSelect1">
+                                                    <option value="">Até</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="col-lg-12 col-md-12" style="margin-bottom: 10px; margin-top: 30px; padding-left: 25px">
+                                                <span>Classificação (conservação)</span>
+                                            </div>
+
+                                            <div class="col-lg-3 col-md-12"> 
+                                                <select name="conservationIUCNGlobal" class="form-control custom-select" id="exampleFormControlSelect1">
+                                                    <option value="">IUCN Global</option>
+                                                    <option value="NE">Não Avaliado</option>
+                                                    <option value="NA">Não Aplicável</option>
+                                                    <option value="DD">Informação Insuficiente</option>
+                                                    <option value="LC">Pouco Preocupante</option>
+                                                    <option value="NT">Quase Ameaçado</option>
+                                                    <option value="VU">Vulnerável</option>
+                                                    <option value="EN">Ameaçado</option>
+                                                    <option value="CR">Criticamente Ameaçado</option>
+                                                    <option value="EW">Extinto na Natureza</option>
+                                                    <option value="RE">Regionalmente Extinto</option>
+                                                    <option value="EX">Extinto</option>
+                                                    <option value="CT">Comercialmente Ameaçado</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-3 col-md-12"> 
+                                                <select name="conservationIUCNEurope" class="form-control custom-select" id="exampleFormControlSelect1">
+                                                    <option value="">IUCN Portugal</option>
+                                                    <option value="NE">Não Avaliado</option>
+                                                    <option value="NA">Não Aplicável</option>
+                                                    <option value="DD">Informação Insuficiente</option>
+                                                    <option value="LC">Pouco Preocupante</option>
+                                                    <option value="NT">Quase Ameaçado</option>
+                                                    <option value="VU">Vulnerável</option>
+                                                    <option value="EN">Ameaçado</option>
+                                                    <option value="CR">Criticamente Ameaçado</option>
+                                                    <option value="EW">Extinto na Natureza</option>
+                                                    <option value="RE">Regionalmente Extinto</option>
+                                                    <option value="EX">Extinto</option>
+                                                    <option value="CT">Comercialmente Ameaçado</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-3 col-md-12"> 
+                                                <select name="conservationRedBookPt" class="form-control custom-select" id="exampleFormControlSelect1">
+                                                    <option value="">Livro vermelho</option>
+                                                    <option value="NE">Não Avaliado</option>
+                                                    <option value="NA">Não Aplicável</option>
+                                                    <option value="DD">Informação Insuficiente</option>
+                                                    <option value="LC">Pouco Preocupante</option>
+                                                    <option value="NT">Quase Ameaçado</option>
+                                                    <option value="VU">Vulnerável</option>
+                                                    <option value="EN">Ameaçado</option>
+                                                    <option value="CR">Criticamente Ameaçado</option>
+                                                    <option value="EW">Extinto na Natureza</option>
+                                                    <option value="RE">Regionalmente Extinto</option>
+                                                    <option value="EX">Extinto</option>
+                                                    <option value="CT">Comercialmente Ameaçado</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-lg-3 col-md-12"> 
+                                                <select name="conservationN2000" class="form-control custom-select" id="exampleFormControlSelect1">
+                                                    <option value="">Natura 2000</option>
+                                                    <option value="BD anexo I">BD anexo I</option>
+                                                    <option value="BD anexo II e IV">BD anexo II e IV</option>
+                                                    <option value="BD anexo II e V">BD anexo II e V</option>
+                                                    <option value="HD anexo IV">HD anexo IV</option>
+                                                    <option value="HD anexo V">HD anexo V</option>
+                                                </select>
+                                            </div>
+                                        
+                                            <div class="col-lg-12 col-md-12" style="margin-bottom: 10px; margin-top: 30px; padding-left: 25px">
+                                                <span>Fonte do registo</span>
+                                            </div>
+
+                                            <div class="col-lg-9 col-md-12"> 
+                                            <input name="bibliographicCitation" id="nav-search-autocomplete-citation"  type="text" class="form-control" placeholder="Referência">
+                                            </div>
+
+                                            <div class="col-lg-3 col-md-12"> 
+                                                <select name="basisOfRecord" class="form-control custom-select" id="exampleFormControlSelect1">
+                                                    <option value="">Tipo de registo</option>
+                                                    <option value="Literature">Bibliográfico</option>
+                                                    <option value="Repository">Base de dados</option>
+                                                    <option value="Field sampling">Amostragem de campo</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-lg-12 col-md-12" style="margin-top: 20px">
+                                                <div class="custom-control custom-switch" style="margin-left: 5px">
+                                                    <input type="checkbox" name="associatedMedia" value="True" class="custom-control-input" id="customSwitch1">
+                                                    <label class="custom-control-label" for="customSwitch1">Registo com fotografia</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12 col-md-12" style="margin-bottom: 10px; margin-top: 20px; padding-left: 25px">
+                                            </div>
+                                        
+                                            <div class="col-lg-8 col-md-12"> 
+                                            </div>
+                                            <div class="col-lg-2 col-md-12" > 
+                                                    <div style="padding-left: 15px;">
+                                                    <a data-toggle="collapse" href="#collapseExample" style="margin-right: 12px;">
+                                                        <button type="button" style="width: 120px;" class="btn btn-secondary  btn-light">Cancelar</button>
+                                                    </a>    
+                                                    </div>                                       
+                                                </div>
+                                            <div class="col-lg-2 col-md-12"> 
+                                                <button type="submit" style="width: 120px" class="btn btn-secondary  btn-dark">Pesquisar</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                            </div>
+                          
+                        </div>

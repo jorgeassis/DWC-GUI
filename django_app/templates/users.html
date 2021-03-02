@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% comment "Optional note" %}
+{% endcomment %}
+
+    {% for users in users %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <small class="text-muted">{{ users.first_name }}</small>
+            </div>
+
+          </div>
+        </article>
+    {% endfor %}
+
+{% endblock content %}

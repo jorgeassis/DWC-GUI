@@ -1,0 +1,486 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+                 
+                <div class="page-content">
+                 
+                    <div class="main-wrapper container">
+
+                        <!-- INCLUDE SEARCH BAR -->
+
+                        {% include "widgets/searchBar.html" %}
+
+                        <!-- HEADER RESULTS -->
+                        
+                        <div class="row" style="margin-top: 50px">
+
+                            <div class="col-lg-12">
+                                
+                            </div>
+
+                            <div class="col-lg-9">
+
+                                <ol class="breadcrumb breadcrumb-separator-2">
+                                    <li class="breadcrumb-item"><a href="{{ HTTP_HOST }}/">Home</a></li>
+                                    <li class="breadcrumb-item"><a href="{{ HTTP_HOST }}/records?displayType=Table">Registos</a></li>
+                                    <li class="breadcrumb-item">Pesquisa [{{ recordsCount }} registos]</li>
+                                </ol>
+
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div style="text-align:right; margin-top: 5px">
+
+                                    {% if request.GET.displayType != 'Table' and recordsCount > 0 %}
+                                    <a href="{{ HTTP_HOST }}/records?displayType=Table{% include "widgets/dynamicLinkSearch.html" %}" style="margin-right: 8px" class="btn btn-secondary btn-dark">Lista</a>
+                                    {% endif %}
+                                    {% if request.GET.displayType != 'Map' and recordsCount > 0 %}
+                                    <a href="{{ HTTP_HOST }}/records?displayType=Map{% include "widgets/dynamicLinkSearch.html" %}" style="margin-right: 8px" class="btn btn-secondary btn-dark">Mapa</a>
+                                    {% endif %}
+                                    {% if request.GET.displayType != 'Gallery' and recordsWithMedia > 0 %}
+                                    <a href="{{ HTTP_HOST }}/records?displayType=Gallery{% include "widgets/dynamicLinkSearch.html" %}" style="margin-right: 8px" class="btn btn-secondary btn-dark">Imagens</a>
+                                    {% endif %}
+
+
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12" style="text-align: center;">
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="row" style="margin-top: 15px;">
+
+                            <!-- ALERT -->
+
+                            {% if recordsCount == 0 %}
+
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="alert alert-danger no-m" role="alert">
+                                        <span style="color: rgb(63, 63, 63)">A sua pesquisa não produziu nenhum resultado. Por favor volte a tentar com um critério de pesquisa diferente.</span>
+                                    </div>
+                                </div>
+                            </div>
+                         
+                            {% endif %}
+
+                            <!-- TABLE -->
+
+                            {% if request.GET.displayType == 'Table' and recordsCount > 0 %}
+
+                            <div class="col-lg-12">
+                                <div class="card card-transactions">
+                                    <div class="card-body">
+
+                                        <a target="_blank"  href="{{ HTTP_HOST }}/download-records?displayType=Table{% include "widgets/dynamicLinkSearch.html" %}" style="margin-right: 8px; float: right" class="btn btn-secondary btn-secondary btn-xs"> Download {{ recordsCount }} records</a>
+
+                                        <h5 class="card-title">Registos [<script>  
+                                        
+                                        var res = {{ recordsCount }};
+                                        if (res > 25) {
+                                            result = 25;
+                                        } else {
+                                            result = {{ recordsCount }};
+                                        }
+                                        document.write(result);
+                                        
+                                        </script> de {{ recordsCount }}]</h5>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Espécie</th>
+                                                        <th scope="col">Local</th>
+                                                        <th scope="col">Data</th>
+                                                        <th scope="col">Fonte</th>
+                                                        <th scope="col">Registo</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    {% for records in records  %}
+
+                                                    <tr>
+                                                        <td>{{ records.scientificName }}</td>
+                                                        <td>{% if records.locality %}{{ records.locality }}{% endif %}</td>
+                                                        <td>{% if records.year %}{{ records.year }}{% endif %}{% if records.month %} - {{ records.month }}{% endif %}{% if records.day %} - {{ records.day }}{% endif %}</td>
+                                                        <td>{% if records.basisOfRecord %}{{ records.basisOfRecord }}{% endif %}</td>
+                                                        <td><a class="mr-2" href="http://10.4.1.33:8000/records/{{ records.pk }}"><span class="badge badge-secondary">Detalhe</span></a></td>
+                                                    </tr>
+
+                                                    {% endfor %}
+
+                                                </tbody>
+                                            </table> 
+                                        </div>     
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endif %}
+
+                            <!-- MAP -->
+
+                            {% if request.GET.displayType == 'Map' and recordsCount > 0 %}
+
+                            <div class="col-lg-12">
+                                <div class="card savings-card">
+
+                                    <div class="spinner-border" id="loading-records" style="position: absolute; z-index: 1000; top: 0; left: 0; right: 0; bottom: 0; margin: auto;">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+
+                                    <div id='map' style="border-radius: 10px; height: 450px; z-index: 0">
+                                    </div> 
+                                </div>
+                            </div>
+
+                            {% endif %}
+
+                            <!-- IMAGES -->
+
+                            {% if request.GET.displayType == 'Gallery' and recordsCount > 0 %}
+
+                            <div class="col-lg-12 col-md-12" style="margin-bottom: 10px">
+                                <h5>Fotografias &nbsp;<span class="badge badge-secondary"><script>  
+                                        
+                                    var res = {{ recordsWithMedia }};
+                                    if (res > 28) {
+                                        result = 28;
+                                    } else {
+                                        result = {{ recordsWithMedia }};
+                                    }
+                                    document.write(result);
+                                    
+                                    </script> de {{ recordsWithMedia }}</span></h5>
+                            </div>
+
+                            {% for records in records  %}
+
+                            <div class="col-lg-3 col-md-12">
+                                <a href="{{ HTTP_HOST }}/records/{{ records.pk }}">
+                                    <div class="card" style="overflow: hidden; max-height: 210px;">
+                                    
+                                        <div class="thumb{{ forloop.counter }}" ></div>
+                                        
+                                        <style>
+                                            .thumb{{ forloop.counter }} { 
+                                                background: url(static/images/associatedMedia/{{ records.associatedMedia|floatformat }}M.jpg) 50% 50% no-repeat; /* 50% 50% centers image in div */
+                                                width: 270px;
+                                                height: 270px;
+                                                }
+
+                                                .thumb{{ forloop.counter }} a {
+                                                display: block;
+                                                width: 270px;
+                                                height: 270px;
+                                                overflow: hidden;
+                                                }
+
+                                                .thumb{{ forloop.counter }} a:hover {   }
+                                        </style>
+
+                                        
+                                        <div class="card-img-overlay">
+                                            <span class="badge badge-secondary">{{ records.scientificName }}</span>
+                                            {% if records.location %}<span class="badge badge-pill badge-secondary">{{ records.location }}</span>{% endif %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>  
+                            
+                            {% endfor %}
+
+                            {% endif %}
+
+                            <!-- PAGINATOR -->
+
+                            {% if request.GET.displayType != 'Map' and recordsCount != 0 %}
+
+                            <div class="col-lg-12"  style="display: flex; justify-content: center;">
+
+                                <div style="margin: 0 auto">
+                                        <ul class="pagination pagination-circle">
+
+                                            {% if records.has_previous %}
+                                            <li class="page-item"><a class="page-link" href="?page={{ records.previous_page_number }}{% include "widgets/dynamicLinkSearch.html" %}&displayType={{ request.GET.displayType }}">Anterior</a></li>
+                                            {% endif %}
+
+                                            {% for l in paginatorRange %}
+
+                                            {% if l %}
+        
+                                                {% if l <= records.number|add:3 and l >= records.number|add:-3 %}
+
+                                                    <li class="page-item{% if records.number == l %} active{% endif %}"><a class="page-link" href="?page={{forloop.counter}}&displayType={{ request.GET.displayType }}{% include "widgets/dynamicLinkSearch.html" %}">{{forloop.counter}}</a></li>
+
+                                                {% endif %}
+        
+                                            {% endif %}
+        
+                                            {% endfor %}
+
+                                            {% if records.has_next %}
+                                            <li class="page-item"><a class="page-link" href="?page={{ records.next_page_number }}&displayType={{ request.GET.displayType }}{% include "widgets/dynamicLinkSearch.html" %}">Próxima</a></li>
+                                            {% endif %}
+
+                                        </ul>
+                                    </div>
+
+                            </div>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- STATISTICS & GRAPHS  -->
+
+                        <div class="row" style="margin-top: 60px">
+
+                            {% if recordsCount != 0 %}
+
+                            <div class="col-lg-4">
+                                <div class="card savings-card">
+                                    <div class="card-body"  style="height: 325px; max-height: 325px;">
+                                        <h5 class="card-title">Resumo da pesquisa<span class="card-title-helper"></span></h5>
+                                        <div class="savings-stats">
+                                            <div>Registos: {{ recordsCount}}</div>
+                                            <div>Espécies: {{ speciesCount}}&nbsp;&nbsp;&nbsp;</div>
+                                            <hr>
+
+                                            <div style="margin-top: 10px;">Janela temporal: {{ recordsYearMin}} - {{ recordsYearMax}}<br>
+
+                                            {% for i in recordsPerDataset  %}
+
+                                            {% if i.basisOfRecord != None %}
+
+                                            {% if i.basisOfRecord == 'Field sampling' %}Amostragem de campo{% endif %}
+                                            {% if i.basisOfRecord == 'Literature' %}Registos bibliográficos{% endif %}
+                                            {% if i.basisOfRecord == 'Repository' %}Bases de dados externas{% endif %}
+                                            {% if i.basisOfRecord == 'Media' %}Registos multimédia{% endif %}
+                                            : {{ i.my_count }}<br>
+                                            {% endif %}
+
+                                            {% endfor %}
+                                            </div>
+                                            <div>Datasets: {{ datasetCount}}</div>
+                                            {% if bibliographicCitationCount %}<div>Referências: {{ bibliographicCitationCount}}&nbsp;&nbsp;&nbsp;</div>{% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>    
+                            
+                            {% endif %}
+                            
+                            {% if recordsYearCount != None %}
+
+                            <div class="col-lg-4">
+                                <div class="card savings-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Registos<span class="card-title-helper">{{ recordsYearCount }} anos</span></h5>
+                                        <div class="savings-stats">
+                                            <h5>{{ recordsCount }}</h5>
+                                            <span>Total cumulativo de registos</span>
+                                        </div>
+                                        <div class="sparkline-charts-margin" id="chart-2"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endif %}
+
+                            {% if recordsPerMonth != None %}
+
+                            <div class="col-lg-4">
+                                <div class="card savings-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Sazonalidade<span class="card-title-helper">12 Meses</span></h5>
+                                        <div class="savings-stats">
+                                            <h5>{{ recordsCount }}</h5>
+                                            <span>Proporção de registos por mês</span>
+                                        </div>
+                                        <div class="sparkline-charts-margin" id="chart-3"></div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- TABLE WITH UNIQUE SPECIES WITH LINKS -->
+
+                        {% if request.GET.displayType != 'Gallery' %}
+                        
+                        {% endif %}
+
+                        {% comment %}
+                        <a class="mr-2" href="{% url 'records' %}?displayType=Table&searchType=Advanced&scientificName={{ records.scientificName }}"><span class="badge badge-secondary">Explorar</span></a>
+                        {% endcomment %}      
+
+                        <!-- TABLE WITH LITERATURE REFS -->
+
+                        {% if request.GET.displayType != 'Gallery' %}
+
+                        {% endif %}
+
+
+                    </div>
+                </div>
+
+
+<!-- MAP SCRIPT -->
+
+{% if request.GET.displayType == 'Map' %}
+{% include "widgets/mainScriptMap.html" %}
+{% endif %}
+
+<script src="{{ HTTP_HOST }}/static/plugins/apexcharts/dist/apexcharts.min.js"></script>
+
+<script>
+
+    {% if recordsPerMonth != None %}
+    
+    var options = {
+              series: [{
+              name: 'Net Profit',
+              data: [{% for r in recordsPerMonth %}{{ r }}{% if forloop.last %}{% else %},{% endif %}{% endfor %}]
+            }],
+              chart: {
+              type: 'bar',
+              fontFamily: 'Lato',
+              height: 180,
+              toolbar: { show: false },
+              zoom: { enabled: false }
+            },
+            dataLabels: { enabled: false },
+            plotOptions: {
+              bar: {
+                horizontal: false,
+                columnWidth: '75%',
+                endingShape: 'rounded'
+              },
+            },
+            dataLabels: { enabled: false },
+            stroke: {
+              show: true,
+              width: 2,
+              colors: ['transparent']
+            },
+            xaxis: {
+              categories: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+              axisBorder: { show: false },
+              axisTicks: { show: false }
+            },
+            yaxis: { show: false },
+            grid: {
+                show: false,
+                xaxis: { lines: { show: false } },   
+                yaxis: { lines: { show: false } },  
+              row: {
+                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                opacity: 0
+              },
+            },
+            fill: {
+              opacity: 1
+            },
+            tooltip: { enabled: false },
+    
+            };
+    
+            var chart = new ApexCharts(document.querySelector("#chart-3"), options);
+            chart.render();
+          
+    {% endif %}
+
+    {% if recordsPerType != None %}
+
+    var options = {
+    
+        chart: {
+            type: 'donut',
+            width: '100%',
+            fontFamily: 'Lato',
+            height: 195,},
+            dataLabels: { enabled: false },
+            tooltip: { enabled: false },
+            legend: {
+                show: true,
+                position: 'bottom',
+                offsetY: 10,
+                itemMargin: {
+                    horizontal: 5,
+                    vertical: 5
+            },
+        },
+        series: [{% for r in recordsPerType %}{{ r.my_count }}{% if forloop.last %}{% else %},{% endif %}{% endfor %}],
+        labels: [{% for r in recordsPerType %}{% if r.basisOfRecord == 'Field sampling' %}'Amostragem'{% endif %}{% if r.basisOfRecord == 'Literature' %}'Bibliografia'{% endif %}{% if r.basisOfRecord == 'Repository' %}'Repositório'{% endif %}{% if forloop.last %}{% else %},{% endif %}{% endfor %}],
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: { width: 200 },
+                legend: { position: 'bottom' }
+            }
+        }]
+        };
+    
+            var chart = new ApexCharts(document.querySelector("#chart-1"), options);
+            chart.render();
+          
+    {% endif %}
+
+    {% if recordsPerYears != None %}
+
+    var options = {
+              series: [{
+                name: "Records",
+                data: [{% for r in recordsPerYears %}{{ r }}{% if forloop.last %}{% else %},{% endif %}{% endfor %}]
+            }],
+            
+              chart: {
+                width: '100%',
+                fontFamily: 'Lato',
+                height: 180,
+                sparkline: { enabled: false },
+                type: 'area',
+                toolbar: { show: false },
+                zoom: { enabled: false }
+            },
+            dataLabels: { enabled: false },
+            stroke: {
+              curve: 'straight',
+              width: 2,
+            },
+            tooltip: { enabled: false },
+            grid: {
+                show: false,
+                xaxis: { lines: { show: false } },   
+                yaxis: { lines: { show: false } },  
+              row: {
+                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                opacity: 0
+              },
+            },
+            xaxis: {
+              categories: [{% for r in recordsPerYearsX %}{{ r }}{% if forloop.last %}{% else %},{% endif %}{% endfor %}],
+              labels: {
+              show: true,},
+              axisBorder: { show: false },
+            }
+            };
+    
+            var chart = new ApexCharts(document.querySelector("#chart-2"), options);
+            chart.render();
+          
+    {% endif %}
+
+    </script>
+
+{% endblock content %}

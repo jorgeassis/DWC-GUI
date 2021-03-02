@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+                 
+                <div class="page-content">
+                                
+                    <div class="main-wrapper container">
+
+                        <!-- INCLUDe SEARCH BAR -->
+
+                        {% include "widgets/searchBar.html" %}
+
+                        <!-- MAP -->
+                        
+                        <div class="row" style="margin-top: 50px">
+
+                            <div class="col-lg-12">
+                                <div class="card savings-card">
+
+                                    <div class="spinner-border" id="loading-records" style="position: absolute; z-index: 1000; top: 0; left: 0; right: 0; bottom: 0; margin: auto;">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+
+                                    <div id='map' style="border-radius: 10px; height: 450px; z-index: 0">
+                                    </div> 
+                                </div>
+                            </div>
+                            <div class="col-lg-12" style="text-align: center;">
+                                A mostrar {{ recordsCountSubset }} registos num total de {{ recordsCount }}&nbsp;&nbsp;<a class="mr-2" href="{% url 'records' %}?displayType=Map"><span class="badge badge-info">Ver todos</span></a>
+                            </div>
+
+                        </div>
+
+                        <!-- GRAPHS -->
+
+                        <div class="row" style="margin-top: 60px">
+                            <div class="col-lg-4">
+                                <div class="card savings-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Registos<span class="card-title-helper">{{ recordsYearCount }} anos</span></h5>
+                                        <div class="savings-stats">
+                                            <h5>{{ recordsCount }}</h5>
+                                            <span>Total cumulativo de registos</span>
+                                        </div>
+                                        <div class="sparkline-charts-margin" id="chart-2"></div>
+                                    </div>
+                                </div>
+                        
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card savings-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Sazonalidade<span class="card-title-helper">12 Meses</span></h5>
+                                        <div class="savings-stats">
+                                            <h5>{{ recordsCount }}</h5>
+                                            <span>Proporção de registos por mês</span>
+                                        </div>
+                                        <div class="sparkline-charts-margin" id="chart-3"></div>
+
+                                    </div>
+                                </div>
+                        
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card savings-card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Tipo de registo<span class="card-title-helper">3 Fontes</span></h5>
+                                        <div class="savings-stats">
+                                            <h5>{{ recordsCount }}</h5>
+                                            <span>Proporção de registos por tipo</span>
+                                        </div>
+                                        <div class="sparkline-charts-margin" id="chart-1"></div>
+                                    </div>
+                                </div>
+                        
+                            </div>
+                        </div>
+
+                        <!-- RANDOM PICS -->
+
+                        <div class="row" style="margin-top: 60px">
+
+                            <div class="col-lg-12 col-md-12" style="margin-bottom: 10px">
+                                <h5>Fotografias &nbsp;<span class="badge badge-secondary">12 Aleatórias</span>&nbsp;&nbsp;<a href="{{ HTTP_HOST }}/records?displayType=Gallery&searchType=Advanced"><span class="badge badge-info">Ver todas</span></a></h5>
+                            </div>
+
+                            {% for records in randomEntries  %}
+                            <div class="col-lg-3 col-md-12">
+                                <a href="{{ HTTP_HOST }}/records/{{ records.pk }}">
+                                    <div class="card" style="overflow: hidden; max-height: 210px;">
+                                    
+                                        <div class="thumb{{ forloop.counter }}" ></div>
+                                        
+                                        <style>
+                                            .thumb{{ forloop.counter }} { 
+                                                background: url(static/images/associatedMedia/{{ records.associatedMedia|floatformat }}M.jpg) 50% 50% no-repeat; /* 50% 50% centers image in div */
+                                                width: 270px;
+                                                height: 270px;
+                                                }
+
+                                                .thumb{{ forloop.counter }} a {
+                                                display: block;
+                                                width: 270px;
+                                                height: 270px;
+                                                overflow: hidden;
+                                                }
+
+                                                .thumb{{ forloop.counter }} a:hover {   }
+                                        </style>
+
+                                        
+                                        <div class="card-img-overlay">
+                                            <span class="badge badge-secondary">{{ records.scientificName }}</span>
+                                            {% if records.location %}<span class="badge badge-pill badge-secondary">{{ records.location }}</span>{% endif %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>    
+                            {% endfor %}
+                        </div>
+                        
+                    </div>
+                </div>
+
+
+<!-- MAP SCRIPT -->
+
+{% include "widgets/mainScriptMap.html" %}
+
+<script src="{{ HTTP_HOST }}/static/plugins/apexcharts/dist/apexcharts.min.js"></script>
+
+<script>
+
+    var options = {
+              series: [{
+              name: 'Net Profit',
+              data: [{% for r in recordsPerMonth %}{{ r }}{% if forloop.last %}{% else %},{% endif %}{% endfor %}]
+            }],
+              chart: {
+              type: 'bar',
+              fontFamily: 'Lato',
+              height: 180,
+              toolbar: { show: false },
+              zoom: { enabled: false }
+            },
+            dataLabels: { enabled: false },
+            plotOptions: {
+              bar: {
+                horizontal: false,
+                columnWidth: '75%',
+                endingShape: 'rounded'
+              },
+            },
+            dataLabels: { enabled: false },
+            stroke: {
+              show: true,
+              width: 2,
+              colors: ['transparent']
+            },
+            xaxis: {
+              categories: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+              axisBorder: { show: false },
+              axisTicks: { show: false }
+            },
+            yaxis: { show: false },
+            grid: {
+                show: false,
+                xaxis: { lines: { show: false } },   
+                yaxis: { lines: { show: false } },  
+              row: {
+                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                opacity: 0
+              },
+            },
+            fill: {
+              opacity: 1
+            },
+            tooltip: { enabled: false },
+    
+            };
+    
+            var chart = new ApexCharts(document.querySelector("#chart-3"), options);
+            chart.render();
+          
+          
+    var options = {
+
+        chart: {
+            type: 'donut',
+            width: '100%',
+            fontFamily: 'Lato',
+            height: 195,},
+            dataLabels: { enabled: false },
+            tooltip: { enabled: false },
+            legend: {
+                show: true,
+                position: 'bottom',
+                offsetY: 10,
+                itemMargin: {
+                    horizontal: 5,
+                    vertical: 5
+            },
+        },
+
+        
+
+        series: [{% for r in recordsPerType %}{% if r.basisOfRecord == 'Field sampling' %}{{ r.my_count }}{% if not forloop.last %},{% endif %}{% endif %}{% if r.basisOfRecord == 'Literature' %}{{ r.my_count }}{% if not forloop.last %},{% endif %}{% endif %}{% if r.basisOfRecord == 'Repository' %}{{ r.my_count }}{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}],
+        labels: [{% for r in recordsPerType %}{% if r.basisOfRecord == 'Field sampling' %}'Amostragem'{% if not forloop.last %},{% endif %}{% endif %}{% if r.basisOfRecord == 'Literature' %}'Bibliografia'{% if not forloop.last %},{% endif %}{% endif %}{% if r.basisOfRecord == 'Repository' %}'Repositório'{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}],
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: { width: 200 },
+                legend: { position: 'bottom' }
+            }
+        }]
+        };
+    
+            var chart = new ApexCharts(document.querySelector("#chart-1"), options);
+            chart.render();
+          
+    var options = {
+              series: [{
+                name: "Records",
+                data: [{% for r in recordsPerYears %}{{ r }}{% if forloop.last %}{% else %},{% endif %}{% endfor %}]
+            }],
+            
+              chart: {
+                width: '100%',
+                fontFamily: 'Lato',
+                height: 180,
+                sparkline: { enabled: false },
+                type: 'area',
+                toolbar: { show: false },
+                zoom: { enabled: false }
+            },
+            dataLabels: { enabled: false },
+            stroke: {
+              curve: 'straight',
+              width: 2,
+            },
+            tooltip: { enabled: false },
+            grid: {
+                show: false,
+                xaxis: { lines: { show: false } },   
+                yaxis: { lines: { show: false } },  
+              row: {
+                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                opacity: 0
+              },
+            },
+            xaxis: {
+              categories: [{% for r in recordsPerYearsX %}{{ r }}{% if forloop.last %}{% else %},{% endif %}{% endfor %}],
+              labels: {
+              show: true,},
+              axisBorder: { show: false },
+            }
+            };
+    
+            var chart = new ApexCharts(document.querySelector("#chart-2"), options);
+            chart.render();
+          
+    </script>
+
+
+{% endblock content %}

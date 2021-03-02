@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+                 
+                <div class="page-content">
+                 
+                    <div class="main-wrapper container">
+
+                        <!-- INCLUDE SEARCH BAR -->
+
+                        {% include "widgets/searchBar.html" %}
+
+                        <!-- HEADER RESULTS -->
+                        
+                        <div class="row" style="margin-top: 50px">
+
+                            <div class="col-lg-12">
+                                
+                            </div>
+
+                            <div class="col-lg-9">
+
+                                <ol class="breadcrumb breadcrumb-separator-2">
+                                    <li class="breadcrumb-item"><a href="{{ HTTP_HOST }}/">Home</a></li>
+                                    <li class="breadcrumb-item"><a href="{{ HTTP_HOST }}/records?displayType=Table">Registos</a></li>
+                                    <li class="breadcrumb-item">{{ record.scientificName }}</li>
+                                </ol>
+
+                            </div>
+
+                            <div class="col-lg-3">
+ 
+                            </div>
+
+                            <div class="col-lg-12" style="text-align: center;">
+
+
+                            </div>
+
+                        </div>
+
+                        <div class="row" style="margin-top: 15px;">
+
+                            <!-- SUMMARY -->
+
+                            <div class="col-lg-4">
+                                <div class="card savings-card">
+                                    <div class="card-body"  style="height: 324px; max-height: 324px;">
+                                        <div style="margin-bottom: 10px;">Espécie: {{ record.scientificName }}&nbsp;&nbsp;&nbsp;<a class="mr-2" href="{% url 'records' %}?displayType=Table&searchType=Advanced&scientificName={{ record.scientificName }}"><span class="badge badge-secondary">Explorar</span></a></div>
+                                        
+                                        {% if record.year  %} <div>Data: {{ record.year }}  {% if record.month  %} - {{ record.month }}{% endif %}{% if record.day  %} - {{ record.day }}{% endif %} </div>{% endif %}
+                                        {% if record.locality  %}<div>Local: {{ record.locality }}</div>{% endif %}
+                                        {% if record.verbatimDepth  %}<div>Profundidade: {{ record.verbatimDepth }}</div>{% endif %}
+                                        
+                                        <hr>
+
+                                        {% if record.basisOfRecord  %}
+                                        <div>Fonte: {% if record.basisOfRecord == 'Field sampling' %}Amostragem de campo{% endif %}
+                                        {% if record.basisOfRecord == 'Literature' %}Registo bibliográfico{% endif %}
+                                        {% if record.basisOfRecord == 'Repository' %}Base de dados{% endif %}</div>
+                                        {% endif %}
+                                        {% if record.datasetName  %}<div>Dataset: {{ record.datasetName }}</div>{% endif %}
+
+                                    </div>
+
+                                </div>
+                            </div>    
+
+                            <!-- MAP -->
+
+                            {% if record.associatedMedia != None %}<div class="col-lg-4">{% endif %}
+                            {% if record.associatedMedia == None %}<div class="col-lg-8">{% endif %}
+                            
+                                <div class="card savings-card">
+                                        <div id='map' style="border-radius: 10px; height: 325px; z-index: 0"></div>
+                                </div>
+                            </div>    
+
+                            <!-- IMAGE -->
+
+                            {% if record.associatedMedia %}
+                            <div class="col-lg-4">
+                                <div class="card savings-card">
+                                    <div class="card-body thumb"  style="height: 325px; max-height: 325px;">
+                                        
+                                        <style>
+                                            .thumb { 
+                                                background: url({{ HTTP_HOST }}/static/images/associatedMedia/{{ record.associatedMedia|floatformat }}M.jpg) 50% 50% no-repeat; /* 50% 50% centers image in div */
+                                                width: 355px;
+                                                height: 355px;
+                                                }
+
+                                        </style>
+
+                                    </div>
+                                </div>
+                            </div>    
+                            {% endif %}
+                        
+                            <div class="col-lg-12">
+                                <div class="card savings-card">
+                                    <div class="card-body">
+                                        <div><h5>Referência</h5>
+                                            {{ record.bibliographicCitation }}&nbsp;&nbsp;&nbsp;
+                                            <a class="mr-2" href="
+                                            {% if record.datasetName == 'iNaturalist' %}https://www.inaturalist.org/observations/{{ record.recordNumber }}{% endif %}
+                                            {% if record.datasetName != 'iNaturalist' %}{% url 'records' %}?displayType=Table&bibliographicCitationExact={{ record.bibliographicCitation }}&searchType=Advanced{% endif %}
+                                            "><span class="badge badge-secondary">Explorar</span></a>
+                                        </div>
+                                        <div style="margin-top: 25px"><h5>Taxonomia</h5>
+
+
+                                            <a href="{% url 'records' %}?taxon=Kingdom&taxonName={{ record.Kingdom }}{% include "widgets/dynamicLinkSearch.html" %}&displayType=Table&searchType=Advanced"> {{ record.Kingdom }} </a>&nbsp;&nbsp;/&nbsp;&nbsp;
+                                            <a href="{% url 'records' %}?taxon=Phylum&taxonName={{ record.Phylum }}{% include "widgets/dynamicLinkSearch.html" %}&displayType=Table&searchType=Advanced"> {{ record.Phylum }} </a>&nbsp;&nbsp;/&nbsp;&nbsp;
+                                            <a href="{% url 'records' %}?taxon=Class&taxonName={{ record.Class }}{% include "widgets/dynamicLinkSearch.html" %}&displayType=Table&searchType=Advanced"> {{ record.Class }} </a>&nbsp;&nbsp;/&nbsp;&nbsp;
+                                            <a href="{% url 'records' %}?taxon=Order&taxonName={{ record.Order }}{% include "widgets/dynamicLinkSearch.html" %}&displayType=Table&searchType=Advanced"> {{ record.Order }} </a>&nbsp;&nbsp;/&nbsp;&nbsp;
+                                            <a href="{% url 'records' %}?taxon=Family&taxonName={{ record.Family }}{% include "widgets/dynamicLinkSearch.html" %}&displayType=Table&searchType=Advanced"> {{ record.Family }} </a>&nbsp;&nbsp;/&nbsp;&nbsp;
+                                            <a href="{% url 'records' %}?taxon=Genus&taxonName={{ record.Genus }}{% include "widgets/dynamicLinkSearch.html" %}&displayType=Table&searchType=Advanced"> {{ record.Genus }} </a>&nbsp;&nbsp;/&nbsp;&nbsp;
+                                            <a href="{% url 'records' %}?taxon=Species&taxonName={{ record.scientificName }}{% include "widgets/dynamicLinkSearch.html" %}&displayType=Table&searchType=Advanced"> {{ record.scientificName }} </a>
+                                  
+                                        </div>
+
+                                        <div style="margin-top: 25px"><h5>Conservação</h5>
+
+                                            {% for r in speciesInfo  %}
+
+                                                    <script>
+
+                                                    function reclass(val) {
+                                                        
+                                                        if (val ==  'NE' ) { varReclass = "Não Avaliado"; }
+                                                        if (val ==  'NA' ) { varReclass = "Não Aplicável"; }
+                                                        if (val ==  'DD' ) { varReclass = "Informação Insuficiente"; }
+                                                        if (val ==  'LC' ) { varReclass = "Pouco Preocupante"; }
+                                                        if (val ==  'NT' ) { varReclass = "Quase Ameaçado"; }
+                                                        if (val ==  'VU' ) { varReclass = "Vulnerável"; }
+                                                        if (val ==  'EN' ) { varReclass = "Ameaçado"; }
+                                                        if (val ==  'CR' ) { varReclass = "Criticamente Ameaçado"; }
+                                                        if (val ==  'EW' ) { varReclass = "Extinto na Natureza"; }
+                                                        if (val ==  'RE' ) { varReclass = "Regionalmente Extinto"; }
+                                                        if (val ==  'EX' ) { varReclass = "Extinto"; }
+                                                        if (val ==  'CT' ) { varReclass = "Comercialmente Ameaçado"; }
+
+                                                        return varReclass; 
+                                                    }
+
+                                                    {% if r.conservationIUCNGlobal %}document.write('IUCN Global: '); document.write( reclass('{{ r.conservationIUCNGlobal }}') ); document.write('<br>');{% endif %}
+                                                    {% if r.conservationIUCNEurope %}document.write('IUCN Europa: '); document.write( reclass('{{ r.conservationIUCNEurope }}') ); document.write('<br>');{% endif %}
+                                                    {% if r.conservationRedBookPt %}document.write('Livro vermelho de Portugal: '); document.write( reclass('{{ r.conservationRedBookPt }}') ); document.write('<br>');{% endif %}
+
+                                                    </script>
+                                                   
+                                            {% if r.conservationN2000 %}{{ r.conservationN2000 }}<br>{% endif %}
+
+                                            {% if not r.conservationIUCNGlobal and not r.conservationIUCNEurope and not r.conservationRedBookPt and not r.conservationN2000  %}
+                                            Sem informação disponível.
+                                            {% endif %}
+
+                                            {% endfor %}
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>    
+
+
+                        </div>
+
+                        <!-- TABLE WITH LITERATURE REFS -->
+
+                        {% if request.GET.displayType != 'Gallery' %}
+
+                        {% endif %}
+
+
+                    </div>
+                </div>
+
+
+<!-- MAP SCRIPT -->
+
+{% include "widgets/mainScriptMapDetail.html" %}
+
+{% endblock content %}

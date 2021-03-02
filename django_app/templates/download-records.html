@@ -1,0 +1,49 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+    <head>
+    </head>
+
+    <body class=" ">
+
+{% block content %}
+
+<script>
+
+function Previous() { 
+    window.history.back() 
+} 
+
+const rows = [
+            ['scientificName' ,'decimalLongitude','decimalLatitude','locality','year','month','day'],
+            {% for records in recordsAll %}
+            ['{{ records.scientificName  }}','{{ records.decimalLongitude  }}','{{ records.decimalLatitude  }}','{{ records.locality|default_if_none:""  }}','{{ records.year|default_if_none:""  }}','{{ records.month|default_if_none:""  }}','{{ records.day|default_if_none:""  }}']
+            {% if forloop.last %}{% else %},{% endif %}
+            {% endfor %}
+          ];
+
+let csvContent = "data:text/csv;charset=utf-8,";
+
+  rows.forEach(function(rowArray) {
+      let row = rowArray.join(",");
+      csvContent += row + "\r\n";
+  });
+
+var encodedUri = encodeURI(csvContent);
+var link = document.createElement("a");
+link.setAttribute("href", encodedUri);
+link.setAttribute("download", "myDownload.csv");
+document.body.appendChild(link); // Required for FF
+
+document.addEventListener('readystatechange', () => {
+  if (document.readyState == 'complete') link.click();
+});
+
+
+</script>
+
+    </body>
+    </html>
+
+{% endblock content %}

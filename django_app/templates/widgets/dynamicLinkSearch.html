@@ -1,0 +1,17 @@
+{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}
+{% if request.GET.taxon %}&taxon={{ request.GET.taxon }}{% endif %}
+{% if request.GET.taxonName %}&taxonName={{ request.GET.taxonName }}{% endif %}
+{% if request.GET.id %}&id={{ request.GET.id }}{% endif %}
+{% if request.GET.scientificName %}&scientificName={{ request.GET.scientificName }}{% endif %}
+{% if request.GET.locality %}&locality={{ request.GET.locality }}{% endif %}
+{% if request.GET.yearTo %}&yearTo={{ request.GET.yearTo }}{% endif %}
+{% if request.GET.yearFrom %}&yearFrom={{ request.GET.yearFrom }}{% endif %}
+{% if request.GET.monthTo %}&monthTo={{ request.GET.monthTo }}{% endif %}
+{% if request.GET.monthFrom %}&monthFrom={{ request.GET.monthFrom }}{% endif %}
+{% if request.GET.depthTo %}&depthTo={{ request.GET.depthTo }}{% endif %}
+{% if request.GET.depthFrom %}&depthFrom={{ request.GET.depthFrom }}{% endif %}
+{% if request.GET.basisOfRecord %}&basisOfRecord={{ request.GET.basisOfRecord }}{% endif %}
+{% if request.GET.associatedMedia %}&associatedMedia={{ request.GET.associatedMedia }}{% endif %}
+{% if request.GET.bibliographicCitation %}&bibliographicCitation={{ request.GET.bibliographicCitation }}{% endif %}
+{% if request.GET.bibliographicCitationExact %}&bibliographicCitationExact={{ request.GET.bibliographicCitationExact }}{% endif %}
+{% if request.GET.searchType %}&searchType={{ request.GET.searchType }}{% endif %}
